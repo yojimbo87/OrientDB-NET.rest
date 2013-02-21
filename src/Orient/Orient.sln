@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orient.Client", "Orient\Orient.Client.csproj", "{1E8312AF-9403-4F92-86FB-C3D22317DB73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orient.Console", "Orient.Console\Orient.Console.csproj", "{2D08C6A7-5344-4C9D-8ADC-90201CDC23BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E8312AF-9403-4F92-86FB-C3D22317DB73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E8312AF-9403-4F92-86FB-C3D22317DB73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E8312AF-9403-4F92-86FB-C3D22317DB73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E8312AF-9403-4F92-86FB-C3D22317DB73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D08C6A7-5344-4C9D-8ADC-90201CDC23BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D08C6A7-5344-4C9D-8ADC-90201CDC23BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D08C6A7-5344-4C9D-8ADC-90201CDC23BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D08C6A7-5344-4C9D-8ADC-90201CDC23BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
