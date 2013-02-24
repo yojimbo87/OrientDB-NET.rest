@@ -8,7 +8,7 @@ using Orient.Client.Protocol;
 
 namespace Orient.Client
 {
-    public class OrientNode
+    public class OrientConnection
     {
         private string _userAgent = "OrientDB-NET.rest/alpha";
 
@@ -40,7 +40,12 @@ namespace Orient.Client
         public string Password { get; set; }
 
         /// <summary>
-        /// Alias which will uniquely identify specified database connection.
+        /// Name of the database.
+        /// </summary>
+        public string Database { get; set; }
+
+        /// <summary>
+        /// Alias of the connection object.
         /// </summary>
         public string Alias { get; set; }
 
@@ -50,18 +55,20 @@ namespace Orient.Client
 
         #endregion
 
-        public OrientNode(string server, int port, bool isSecured, string userName, string password, string alias)
+        public OrientConnection(string server, int port, bool isSecured, string userName, string password, string database, string alias)
         {
             Server = server;
             Port = port;
             IsSecured = isSecured;
             Username = userName;
             Password = password;
+            Database = database;
             Alias = alias;
 
             BaseUri = new Uri((isSecured ? "https" : "http") + "://" + server + ":" + port + "/");
 
             Credentials = new CredentialCache();
+            Credentials.Add(BaseUri, "Basic", new NetworkCredential(Username, Password));
         }
 
         internal Response Process(Request request)
@@ -70,12 +77,6 @@ namespace Orient.Client
             httpRequest.KeepAlive = true;
             httpRequest.Method = request.Method;
             httpRequest.UserAgent = _userAgent;
-
-            if (Credentials.GetCredential(BaseUri, "Basic") == null)
-            {
-                Credentials.Add(BaseUri, "Basic", new NetworkCredential(Username, Password));
-            }
-
             httpRequest.Credentials = Credentials;
 
             if ((request.Headers.Count > 0))

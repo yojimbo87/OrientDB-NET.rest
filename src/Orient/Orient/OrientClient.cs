@@ -8,6 +8,8 @@ namespace Orient.Client
     {
         #region Properties
 
+        private static List<OrientConnection> _connections;
+
         public static string DriverName
         {
             get { return "OrientDB-NET.rest"; }
@@ -18,28 +20,23 @@ namespace Orient.Client
             get { return "Alpha 1.0"; }
         }
 
-        /// <summary>
-        /// Collection of nodes which consists of database connection parameters identified by unique alias string.
-        /// </summary>
-        public static List<OrientNode> Nodes { get; set; }
-
         #endregion
 
         static OrientClient()
         {
-            Nodes = new List<OrientNode>();
+            _connections = new List<OrientConnection>();
         }
 
-        internal static OrientNode GetNode(string alias)
+        public static void AddConnection(string server, int port, bool isSecured, string userName, string password, string database, string alias)
         {
-            return Nodes.Where(node => node.Alias == alias).FirstOrDefault();
+            OrientConnection connection = new OrientConnection(server, port, isSecured, userName, password, database, alias);
+
+            _connections.Add(connection);
         }
 
-        public static OrientDatabase Connect(string alias, string databaseName)
+        internal static OrientConnection GetConnection(string alias)
         {
-            Connect connect = new Connect(GetNode(alias));
-            
-            return connect.Get(databaseName);
+            return _connections.Where(connection => connection.Alias == alias).FirstOrDefault();
         }
     }
 }
