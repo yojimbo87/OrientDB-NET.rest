@@ -71,7 +71,10 @@ namespace Orient.Client
             httpRequest.Method = request.Method;
             httpRequest.UserAgent = _userAgent;
 
-            Credentials.Add(BaseUri, "Basic", new NetworkCredential(Username, Password, request.Realm));
+            if (Credentials.GetCredential(BaseUri, "Basic") == null)
+            {
+                Credentials.Add(BaseUri, "Basic", new NetworkCredential(Username, Password));
+            }
 
             httpRequest.Credentials = Credentials;
 
