@@ -1,13 +1,28 @@
-﻿
+﻿using Orient.Client.Protocol;
+
 namespace Orient.Client
 {
     public class OrientDatabase
     {
-        public string Version { get; set; }
-        public string OsName { get; set; }
-        public string OsVersion { get; set; }
-        public string OsArchitecture { get; set; }
-        public string JavaVendor { get; set; }
-        public string JavaVersion { get; set; }
+        private OrientConnection _connection;
+
+        public OrientDatabase(string alias)
+        {
+            _connection = OrientClient.GetConnection(alias);
+        }
+
+        /*public void Connect(string alias, string databaseName)
+        {
+            Connect operation = new Connect(_connection);
+
+            return operation.Get(databaseName);
+        }*/
+
+        public string Query(string language, string query)
+        {
+            Query operation = new Query(_connection);
+
+            return operation.Get(language, query, 20, "*:1");
+        }
     }
 }
