@@ -1,21 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
-using ServiceStack.Text;
+﻿using System.Net;
 
 namespace Orient.Client.Protocol
 {
     internal class Connect
     {
         private string _apiUri { get { return "connect/"; } }
-        private OrientNode _node;
+        private OrientConnection _connection;
 
-        internal Connect(OrientNode node)
+        internal Connect(OrientConnection connection)
         {
-            _node = node;
+            _connection = connection;
         }
 
-        internal OrientDatabase Get(string databaseName)
+        /*internal OrientDatabase Get(string databaseName)
         {
             var request = new Request();
             request.RelativeUri = _apiUri + databaseName;
@@ -41,6 +38,6 @@ namespace Orient.Client.Protocol
             }
 
             return database;
-        }
+        }*/
     }
 }
