@@ -45,7 +45,6 @@ namespace Orient.Client.Protocol
         }
         internal Dictionary<string, string> QueryString { get; set; }
         internal string Method { get; set; }
-        internal string Realm { get; set; }
         internal WebHeaderCollection Headers { get; set; }
         internal string Body { get; set; }
 
