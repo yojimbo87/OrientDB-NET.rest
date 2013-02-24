@@ -17,29 +17,60 @@ namespace Orient.Console
 
         static void Main(string[] args)
         {
-            OrientNode node = new OrientNode(
+            OrientClient.AddConnection(
                 "localhost.",
                 int.Parse("2480"),
                 false,
                 "admin",
                 "admin",
-                _alias
+                "TinkerPop",
+                _alias    
             );
-            OrientClient.Nodes.Add(node);
 
             //TestConnect();
             //TestConnect();
             //TestConnect();
-            TestAuth();
+            TestQuery();
+            //TestAuth();
 
+            /*SetTimeout(() =>
+            {
+                TestQuery();
+            }, 9000);
+
+            SetTimeout(() =>
+            {
+                TestQuery();
+            }, 20000);*/
+
+            System.Console.WriteLine("\nEND");
             System.Console.ReadLine();
         }
 
         static void TestConnect()
         {
-            OrientDatabase database = OrientClient.Connect(_alias, "TinkerPop");
+            //OrientDatabase database = OrientClient.Connect(_alias, "TinkerPop");
 
             //database.PrintDump();
+        }
+
+        static void TestQuery()
+        {
+            //OrientDatabase database = new OrientDatabase(_alias);
+
+            //System.Console.WriteLine(database.Query("sql", "select from OGraphVertex"));
+
+            long total = 0;
+
+            for (int i = 0; i < 50; i++)
+            {
+                long tps = Do();
+                total += tps;
+
+                System.Console.WriteLine("TPS: " + tps);
+            }
+
+            System.Console.WriteLine("Average: " + total / 50);
         }
 
         static void TestAuth()
@@ -85,5 +116,68 @@ namespace Orient.Console
 
             System.Console.WriteLine(reader.ReadToEnd().Length);
         }
+
+        static long Do()
+        {
+            DateTime start = DateTime.Now;
+            bool running = true;
+            long tps = 0;
+
+            do
+            {
+                OrientDatabase database = new OrientDatabase(_alias);
+
+                //string s = database.Query("sql", "select name from ographvertex where in[0].label = 'followed_by' and in[0].out.name = 'JAM'");
+                string s = database.Query("sql", "select from ographedge");
+                tps++;
+
+                TimeSpan dif = DateTime.Now - start;
+
+                if (dif.TotalMilliseconds > 1000)
+                {
+                    running = false;
+                }
+            }
+            while (running);
+
+            return tps;
+        }
+
+        #region Timers
+
+        static IDisposable SetInterval(Action method, int delayInMilliseconds)
+        {
+            System.Timers.Timer timer = new System.Timers.Timer(delayInMilliseconds);
+            timer.Elapsed += (source, e) =>
+            {
+                method();
+            };
+
+            timer.Enabled = true;
+            timer.Start();
+
+            // Returns a stop handle which can be used for stopping
+            // the timer, if required
+            return timer as IDisposable;
+        }
+
+        static IDisposable SetTimeout(Action method, int delayInMilliseconds)
+        {
+            System.Timers.Timer timer = new System.Timers.Timer(delayInMilliseconds);
+            timer.Elapsed += (source, e) =>
+            {
+                method();
+            };
+
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Start();
+
+            // Returns a stop handle which can be used for stopping
+            // the timer, if required
+            return timer as IDisposable;
+        }
+
+        #endregion
     }
 }
