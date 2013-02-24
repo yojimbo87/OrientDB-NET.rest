@@ -20,6 +20,7 @@ namespace Orient.Client.Protocol
             var request = new Request();
             request.RelativeUri = _apiUri + databaseName;
             request.Method = RequestMethod.GET.ToString();
+            request.Realm = "OrientDB db-" + databaseName;
 
             var response = _node.Process(request);
 
