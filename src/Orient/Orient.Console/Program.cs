@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using ServiceStack.Text;
 using Orient.Client;
 
+using System.Net;
+using System.IO;
+
 namespace Orient.Console
 {
     class Program
@@ -15,7 +18,7 @@ namespace Orient.Console
         static void Main(string[] args)
         {
             OrientNode node = new OrientNode(
-                "localhost",
+                "localhost.",
                 int.Parse("2480"),
                 false,
                 "admin",
@@ -24,7 +27,10 @@ namespace Orient.Console
             );
             OrientClient.Nodes.Add(node);
 
-            TestConnect();
+            //TestConnect();
+            //TestConnect();
+            //TestConnect();
+            TestAuth();
 
             System.Console.ReadLine();
         }
@@ -33,7 +39,51 @@ namespace Orient.Console
         {
             OrientDatabase database = OrientClient.Connect(_alias, "TinkerPop");
 
-            database.PrintDump();
+            //database.PrintDump();
+        }
+
+        static void TestAuth()
+        {
+            string url = "http://localhost.:2480/connect/Tinkerpop";
+            HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
+            WebResponse resp;
+            StreamReader reader;
+
+
+            // TODO: is the realm necessary when the keep-alive connection is used?
+            string user = "admin";
+            string pwd = "admin";
+            string domain = "OrientDB db-TinkerPop";
+
+            string auth = "Basic " + Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(user + ":" + pwd));
+            req.KeepAlive = true;
+            req.Headers.Add("Authorization", auth);
+            req.UserAgent = "whoa";
+            resp = req.GetResponse();
+            reader = new StreamReader(resp.GetResponseStream());
+
+            System.Console.WriteLine(reader.ReadToEnd().Length);
+            resp.Close();
+
+
+            req = HttpWebRequest.Create(url) as HttpWebRequest;
+            req.KeepAlive = true;
+            req.Credentials = new NetworkCredential(user, pwd, domain);
+            req.UserAgent = "whoa";
+            resp = req.GetResponse();
+            reader = new StreamReader(resp.GetResponseStream());
+
+            System.Console.WriteLine(reader.ReadToEnd().Length);
+            //resp.Close();
+
+            req = HttpWebRequest.Create(url) as HttpWebRequest;
+            req.KeepAlive = true;
+            req.Credentials = new NetworkCredential(user, pwd, domain);
+            req.UserAgent = "whoa";
+            resp = req.GetResponse();
+            reader = new StreamReader(resp.GetResponseStream());
+
+            System.Console.WriteLine(reader.ReadToEnd().Length);
         }
     }
 }
